@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Image from 'next/image'
+import Feedes from '../components/Feedes'
 import Sidebar from '../components/Sidebar'
 
 
@@ -18,9 +18,9 @@ export default function Home() {
             
           <Sidebar/>
 
-          {/* fide */}
-
-
+          {/* feede */}
+            <Feedes/>
+          
           {/* widget */}
 
 
