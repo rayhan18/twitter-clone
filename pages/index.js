@@ -5,7 +5,7 @@ import Wedget from '../components/Wedget'
 
 
 
-export default function Home({newResult}) {
+export default function Home({newResult ,randomUsersResults}) {
   return (
     <div className=''>
       <Head>
@@ -24,7 +24,7 @@ export default function Home({newResult}) {
           
           {/* widget */}
 
-            <Wedget newResult={newResult.articles}/>
+            <Wedget newResult={newResult.articles} randomUsersResults={randomUsersResults.results}/>
           {/* modal */}
 
       </main>
@@ -40,7 +40,23 @@ export async function getServerSideProps() {
   // Fetch data from external API
   const res = await fetch(`https://saurav.tech/NewsAPI/top-headlines/category/business/us.json`)
   const newResult = await res.json()
+  //who to flow me API
+  let randomUsersResults = [];
+
+  try {
+    const res = await fetch(
+      "https://randomuser.me/api/?results=30&inc=name,login,picture"
+    );
+
+    randomUsersResults = await res.json();
+  } catch (e) {
+    randomUsersResults = [];
+  }
+
+// const randomUsersResults = await fetch(
+  //   "https://randomuser.me/api/?results=30&inc=name,login,picture"
+  // ).then((res) => res.json());
 
   // Pass data to the page via props
-  return { props: { newResult } }
+  return { props: { newResult ,randomUsersResults } }
 }

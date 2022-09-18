@@ -12,9 +12,8 @@ export default function News({article}) {
         </div>
         <img
           className="rounded-xl "
-        
           src={article.urlToImage}
-          alt=""
+          alt="userimg"
         />
       </div>
     </a>
