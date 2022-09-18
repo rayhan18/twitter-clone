@@ -1,10 +1,11 @@
 import Head from 'next/head'
 import Feedes from '../components/Feedes'
 import Sidebar from '../components/Sidebar'
+import Wedget from '../components/Wedget'
 
 
 
-export default function Home() {
+export default function Home({newResult}) {
   return (
     <div className=''>
       <Head>
@@ -13,7 +14,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className='flex min-h-screen max-w-7xl px-8'>
+      <main className='flex min-h-screen px-8'>
           {/* sidebar */}
             
           <Sidebar/>
@@ -23,12 +24,23 @@ export default function Home() {
           
           {/* widget */}
 
-
+            <Wedget newResult={newResult.articles}/>
           {/* modal */}
+
       </main>
       
 
      
     </div>
   )
+}
+
+
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(`https://saurav.tech/NewsAPI/top-headlines/category/business/us.json`)
+  const newResult = await res.json()
+
+  // Pass data to the page via props
+  return { props: { newResult } }
 }
