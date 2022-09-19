@@ -9,7 +9,7 @@ import {getStorege} from 'firebase/storege'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: prosess.env.FIREBASE_API_KEY. ,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: "twitted-clone.firebaseapp.com",
   projectId: "twitted-clone",
   storageBucket: "twitted-clone.appspot.com",
