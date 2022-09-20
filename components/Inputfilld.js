@@ -26,6 +26,7 @@ const sendPost= async ()=>{
     timestamp: serverTimestamp(),
     name: session.user.name,
     username: session.user.username,
+   
  })
  const imageRef = ref(storage, `posts/${docRef.id}/image`);
  if (selectedfile) {
@@ -51,6 +52,7 @@ const addImagetoHook=(e)=>{
   }
   
 }
+
   return (
     <div >
       {session &&(

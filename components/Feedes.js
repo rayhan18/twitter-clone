@@ -3,32 +3,24 @@
 import { HiOutlineSparkles } from "react-icons/hi";
 import Inputfilld from "./Inputfilld";
 import Post from "./Post"
+import { useEffect, useState } from "react";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { db } from "../firebase";
 
-const posts =[
-    {
-        id:"1",
-        name: "Feedes",
-       username:'Rayhan',
-        postimg:'https://www.eyeofriyadh.com/news_images/2016/12/2307f1b13af25.jpg',
-        userImg:'https://i.insider.com/5dcc135ce94e86714253af21?width=1000&format=jpeg&auto=webp',
-        timestamps:'2h ago',
-        text:'nice view'
-    },
-    {
-        id:"2",
-        name: "Feedes 2",
-       username:'Rimon',
-       postimg:'https://www.eyeofriyadh.com/news_images/2016/12/2307f1b13af25.jpg',
-        userImg:'https://i.insider.com/5dcc135ce94e86714253af21?width=1000&format=jpeg&auto=webp',
-        timestamps:'2h ago',
-        text:'nice view'
-    },
-]
 
 export default function Feedes() {
-    
+const [posts ,setPosts] = useState([])
 
-  //console.log(posts)
+useEffect(
+    () =>
+      onSnapshot(
+        query(collection(db, "posts"), orderBy("timestamp", "desc")),
+        (snapshot) => {
+          setPosts(snapshot.docs);
+        }
+      ),
+    []
+  );
 
   return (
     <div className='lg:ml-[230px] border-l border-r lg:min-w-[500px] sm:ml[70px] flex-grow max-w-lg'>
