@@ -7,8 +7,9 @@ import { BsChat, BsHeart, BsShare, BsTrash } from "react-icons/bs";
 import { CgChart } from "react-icons/cg";
 import { HiDotsHorizontal } from "react-icons/hi";
 import Moment from "react-moment";
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 import { AiFillHeart ,AiOutlineHeart} from "react-icons/ai";
+import { deleteObject, ref } from "firebase/storage";
 
 
 export default function Post({allpostdata}) {
@@ -43,9 +44,15 @@ useEffect(() => {
       }
     }else{
       signIn()
+    }  
+  }
+
+  async function deletePost(){
+    if(window.confirm('Are you sure you want to delete this item?')){
+      deleteDoc(doc(db, "posts",allpostdata.id ))
+      deleteObject(ref(storage ,`posts${allpostdata.id}/image`))
     }
-    
-    
+     
   }
   return (
  <div className="flex p-3 cursor-pointer border-b border-gray-200">
@@ -91,10 +98,11 @@ useEffect(() => {
             )}
             {likes?.length > 0 && <span className={`${hasLikes && 'text-red-600 text-sm '}select-none`} >{likes.length}</span>}
             </div>
-            
-           
-           {/* <AiOutlineHeart onClick={likePost} className="h-9 w-9 hoverEffect p-2  hover:bg-sky-100"/> */}
-            <BsTrash className="h-9 w-9 hoverEffect p-2 hover:text-red-500 hover:bg-red-100"/>
+
+             {session?.user.uid === allpostdata?.data().id &&(
+             <BsTrash onClick={deletePost} className="h-9 w-9 hoverEffect p-2 hover:text-red-500 hover:bg-red-100"/>
+           )}
+          
             <BsShare className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
             <CgChart className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
           </div>
