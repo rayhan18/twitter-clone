@@ -10,13 +10,15 @@ import Moment from "react-moment";
 import { db, storage } from "../firebase";
 import { AiFillHeart ,AiOutlineHeart} from "react-icons/ai";
 import { deleteObject, ref } from "firebase/storage";
-import postcss from "postcss";
+import {useRecoilState} from 'recoil'
+import {modalState} from '../atom/ComponentAtom'
 
 
 export default function Post({allpostdata}) {
  const {data:session} = useSession()
  const [likes ,setLikes] = useState([])
  const [hasLikes ,setHasLikes] = useState(false)
+const [open , setOpen] = useRecoilState(modalState)
 
  useEffect(() => {
   const unsubscribe = onSnapshot(
@@ -48,6 +50,7 @@ useEffect(() => {
     }  
   }
 
+  //some error here 
   async function deletePost(){
     if(window.confirm('Are you sure you want to delete this post?')){
       deleteDoc(doc(db, "posts",allpostdata.id ))
@@ -100,7 +103,8 @@ useEffect(() => {
           <img className="rounded-2xl mr-2" src={allpostdata.data().image} alt="" />
           {/* icons */}
           <div className="flex justify-between text-gray-500 p-2">
-            <BsChat className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
+            <BsChat onClick={()=>setOpen(!open)} className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
+           
             <div className="flex items-center">
             {hasLikes ?(
               <AiFillHeart onClick={likePost} className="h-9 w-9 hoverEffect p-2 text-red-500 hover:bg-sky-100"/>

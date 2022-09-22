@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import CommandMudol from '../components/CommandMudol'
 import Feedes from '../components/Feedes'
 import Sidebar from '../components/Sidebar'
 import Wedget from '../components/Wedget'
@@ -26,7 +27,7 @@ export default function Home({newResult ,randomUsersResults}) {
 
             <Wedget newResult={newResult.articles} randomUsersResults={randomUsersResults.results}/>
           {/* modal */}
-
+            <CommandMudol/>
       </main>
       
 
