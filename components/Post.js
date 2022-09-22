@@ -10,6 +10,7 @@ import Moment from "react-moment";
 import { db, storage } from "../firebase";
 import { AiFillHeart ,AiOutlineHeart} from "react-icons/ai";
 import { deleteObject, ref } from "firebase/storage";
+import postcss from "postcss";
 
 
 export default function Post({allpostdata}) {
@@ -48,12 +49,22 @@ useEffect(() => {
   }
 
   async function deletePost(){
-    if(window.confirm('Are you sure you want to delete this item?')){
+    if(window.confirm('Are you sure you want to delete this post?')){
       deleteDoc(doc(db, "posts",allpostdata.id ))
-      deleteObject(ref(storage ,`posts${allpostdata.id}/image`))
+       if(allpostdata.data().image){
+        deleteObject(ref(storage,`posts${allpostdata.id}/image`))
+      }
+      
     }
      
   }
+
+ 
+
+
+
+
+
   return (
  <div className="flex p-3 cursor-pointer border-b border-gray-200">
  

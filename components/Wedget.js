@@ -2,6 +2,7 @@ import { AiOutlineVerticalLeft } from "react-icons/ai";
 import { BsSearch } from "react-icons/bs";
 import News from "./News";
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Wedget({newResult,randomUsersResults}) {
     const [articleNum,setArticleNum] = useState(3)
@@ -24,15 +25,33 @@ export default function Wedget({newResult,randomUsersResults}) {
       </div>
       <div className="text-gray-700 space-y-3 bg-gray-100 rounded-xl pt-2 w-[90%] xl:w-[75%]">
         <p className="font-bold  px-4">Whats happening</p><hr/>
+        <AnimatePresence>
             {newResult.slice(0,articleNum).map(article=>(
-        <News key={article.id} article={article}/>
-      ))}
+              <motion.div key={article.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1 }}
+              >
+                  <News key={article.id} article={article}/>
+              </motion.div> 
+           
+          ))}
+        </AnimatePresence>
+           
       <button onClick={()=> setArticleNum(articleNum + 3)}  className="text-blue-300 pl-4 pb-3 hover:text-blue-400">Show more</button>
         </div>
   {/* random users */}
         <div className="text-gray-700 space-y-3">
             <h6 className="font-bold text-lg px-4">Who to floow me</h6>
+            <AnimatePresence>
                 {randomUsersResults.slice(0,randomusernum).map(randomuser=>(
+                  <motion.div key={randomuser.login.username}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1 }}
+                  >
                     <div key={randomuser.login.username} className="flex items-center border-b px-2 cursor-pointer hover:bg-gray-200 transition duration-500 ease-out">
                        <div>
                        <img className="rounded-full w-10" src={randomuser.picture.thumbnail} alt="user"/>
@@ -45,7 +64,9 @@ export default function Wedget({newResult,randomUsersResults}) {
                         <button className="ml-auto bg-blue-500 text-white rounded-full text-sm px-3.5 py-1.5 font-bold">Follow</button>
                        
                     </div>
+                    </motion.div>
                 ))}
+              </AnimatePresence>
             <button onClick={()=>setrandomUserNum(randomusernum + 3)} className="ml-auto bg-blue-600 text-white rounded-full text-sm px-3.5 py-1.5 font-bold">Show more</button>
         </div>
      
