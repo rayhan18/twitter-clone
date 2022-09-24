@@ -12,26 +12,26 @@ import { AiFillHeart ,AiOutlineHeart} from "react-icons/ai";
 import { deleteObject, ref } from "firebase/storage";
 import {useRecoilState} from 'recoil'
 import {modalState ,postIdState } from '../atom/ComponentAtom'
+import { useRouter } from "next/router";
 
-
-export default function Post({allpostdata}) {
+export default function PostPage({allpostdata ,id}) {
  const {data:session} = useSession()
  const [likes ,setLikes] = useState([])
  const [comments ,setComments] = useState([])
  const [hasLikes ,setHasLikes] = useState(false)
 const [open , setOpen] = useRecoilState(modalState)
 const [postId , setPostId] = useRecoilState(postIdState)
-
+const router = useRouter()
  useEffect(() => {
   const unsubscribe = onSnapshot(
-    collection(db, "posts", allpostdata.id, "likes"),
+    collection(db, "posts", id, "likes"),
     (snapshot) => setLikes(snapshot.docs)
   );
 }, [db]);
 
 useEffect(() => {
   const unsubscribe = onSnapshot(
-    collection(db, "posts", allpostdata.id, "comments"),
+    collection(db, "posts", id, "comments"),
     (snapshot) => setComments(snapshot.docs)
   );
 }, [db]);
@@ -47,9 +47,9 @@ useEffect(() => {
   async function likePost(){
     if(session){
       if(hasLikes){
-        await deleteDoc(doc(db, "posts",allpostdata.id ,'likes',session?.user.uid))
+        await deleteDoc(doc(db, "posts",id ,'likes',session?.user.uid))
       }else{
-        await setDoc(doc(db, "posts",allpostdata.id ,'likes' ,session?.user.uid),{
+        await setDoc(doc(db, "posts",id ,'likes' ,session?.user.uid),{
           username: session.user.username
         })
       }
@@ -61,12 +61,13 @@ useEffect(() => {
   //some error here 
   async function deletePost(){
     if(window.confirm('Are you sure you want to delete this post?')){
-      deleteDoc(doc(db, "posts",allpostdata.id ))
-       if(allpostdata.data().image){
-        deleteObject(ref(storage,`posts${allpostdata.id}/image`))
+      deleteDoc(doc(db, "posts",id ))
+       if(allpostdata?.data().image){
+        deleteObject(ref(storage,`posts${id}/image`))
       }
-      
+      router.push('/')
     }
+   
      
   }
 
@@ -92,10 +93,10 @@ useEffect(() => {
        <div className="flex items-center justify-between">
          {/* post info */}
            <div className="flex items-center space-x-1 whitespace-nowrap">
-             <h4 className="font-bold text-[15px] sm:text-[16px] hover:underline">{allpostdata.data().name}</h4>
-             <span className="text-sm sm:text-[12px]">@{allpostdata.data().username}</span>
+             <h4 className="font-bold text-[15px] sm:text-[16px] hover:underline">{allpostdata?.data()?.name}</h4>
+             <span className="text-sm sm:text-[12px]">@{allpostdata?.data()?.username}</span>
              <span className="text-sm sm:text-[12px] hover:underline"> 
-             <Moment fromNow>{allpostdata?.data().timestamp?.toDate()}</Moment>
+             <Moment fromNow>{allpostdata?.data()?.timestamp?.toDate()}</Moment>
              </span>
            </div>
            {/* dot icon */}
@@ -106,9 +107,9 @@ useEffect(() => {
 
         </div>
           {/* post text  */}
-          <p className="text-gray-800 text-[15px sm:text-[16px] mb-2">{allpostdata.data().text}</p>
+          <p className="text-gray-800 text-[15px sm:text-[16px] mb-2">{allpostdata?.data()?.text}</p>
           {/* post images  */}
-          <img className="rounded-2xl mr-2" src={allpostdata.data().image} alt="" />
+          <img className="rounded-2xl mr-2" src={allpostdata?.data()?.image} alt="" />
           {/* icons */}
           <div className="flex justify-between text-gray-500 p-2">
             <div className="flex items-center select-none">
@@ -117,7 +118,7 @@ useEffect(() => {
               if(!session){
                 signIn()
               }else{
-                setPostId(allpostdata.id)
+                setPostId(id)
                 setOpen(!open)
               }
              
@@ -138,7 +139,7 @@ useEffect(() => {
             {likes?.length > 0 && <span className={`${hasLikes && 'text-red-600 text-sm '}select-none`} >{likes.length}</span>}
             </div>
 
-             {session?.user.uid === allpostdata?.data().id &&(
+             {session?.user.uid === allpostdata?.data()?.id &&(
              <BsTrash onClick={deletePost} className="h-9 w-9 hoverEffect p-2 hover:text-red-500 hover:bg-red-100"/>
            )}
           

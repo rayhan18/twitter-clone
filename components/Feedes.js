@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 import { AnimatePresence, motion } from "framer-motion";
+import PostPage from "./Post";
 
 
 export default function Feedes() {
@@ -41,7 +42,7 @@ useEffect(
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
             >
-                <Post  key={postdata.id} allpostdata={postdata}/>
+                <PostPage  key={postdata.id} id={postdata.id} allpostdata={postdata}/>
             </motion.div>
              
            
