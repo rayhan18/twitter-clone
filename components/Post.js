@@ -11,14 +11,16 @@ import { db, storage } from "../firebase";
 import { AiFillHeart ,AiOutlineHeart} from "react-icons/ai";
 import { deleteObject, ref } from "firebase/storage";
 import {useRecoilState} from 'recoil'
-import {modalState} from '../atom/ComponentAtom'
+import {modalState ,postIdState } from '../atom/ComponentAtom'
 
 
 export default function Post({allpostdata}) {
  const {data:session} = useSession()
  const [likes ,setLikes] = useState([])
+ const [comments ,setComments] = useState([])
  const [hasLikes ,setHasLikes] = useState(false)
 const [open , setOpen] = useRecoilState(modalState)
+const [postId , setPostId] = useRecoilState(postIdState)
 
  useEffect(() => {
   const unsubscribe = onSnapshot(
@@ -27,6 +29,12 @@ const [open , setOpen] = useRecoilState(modalState)
   );
 }, [db]);
 
+useEffect(() => {
+  const unsubscribe = onSnapshot(
+    collection(db, "posts", allpostdata.id, "comments"),
+    (snapshot) => setComments(snapshot.docs)
+  );
+}, [db]);
 
 useEffect(() => {
   setHasLikes(likes.findIndex((like) => like.id === session?.user.uid) !== -1);
@@ -103,7 +111,23 @@ useEffect(() => {
           <img className="rounded-2xl mr-2" src={allpostdata.data().image} alt="" />
           {/* icons */}
           <div className="flex justify-between text-gray-500 p-2">
-            <BsChat onClick={()=>setOpen(!open)} className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
+            <div className="flex items-center select-none">
+            <BsChat
+             onClick={()=>{
+              if(!session){
+                signIn()
+              }else{
+                setPostId(allpostdata.id)
+                setOpen(!open)
+              }
+             
+            } }
+
+             className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"/>
+            {comments.length > 0 &&(
+              <span className="text-sm">{comments.length}</span>
+            )}
+            </div>
            
             <div className="flex items-center">
             {hasLikes ?(
