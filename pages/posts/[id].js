@@ -1,10 +1,11 @@
-import { doc, onSnapshot } from 'firebase/firestore'
+import { collection, doc,docs, onSnapshot, orderBy, query } from 'firebase/firestore'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect,useState } from 'react'
 import { BsArrowLeft } from 'react-icons/bs'
-
+import GetComment from '../../components/Comment'
 import CommandMudol from '../../components/CommandMudol'
+
 import PostPage from '../../components/Post'
 import Post from '../../components/Post'
 import Sidebar from '../../components/Sidebar'
@@ -17,11 +18,28 @@ export default function Posts({newResult ,randomUsersResults}) {
     const router = useRouter()
     const {id} = router.query
     const [post ,setPost] = useState()
-
+    const [comments ,setComments ] = useState([])
+    
+    //get posts
     useEffect(()=>{
         onSnapshot(doc(db, "posts" , id),(snapshot)=> setPost(snapshot))
     },[db ,id])
 
+  //get commands
+  // useEffect(()=>{
+  //    onSnapshot(query(collection(db, "posts",id ,'comments'),
+  //     orderBy("Timestamp",'disc')), (snapshot)=>setComments(snapshot.oldDocs))
+  // },[db , id])
+  useEffect(() => {
+    onSnapshot(
+      query(
+        collection(db, "posts", id, "comments"),
+        orderBy("timestamp", "desc")
+      ),
+      (snapshot) => setComments(snapshot.docs)
+    );
+  }, [db, id]);
+ 
 
   return (
     <div className=''>
@@ -50,8 +68,28 @@ export default function Posts({newResult ,randomUsersResults}) {
        </div>
       
        <PostPage id={id} allpostdata={post}/>
-      
-      
+       <p>{id}</p>
+       <h2> {}</h2>
+
+       
+        
+       
+
+
+         {comments.length > 0 &&(
+            <div>
+              
+             {comments.map((comment)=>(
+              //  console.log(comment.data() ,'hhh')
+              
+                <GetComment key={comment.id} 
+                id={comment.id} 
+                comment={comment.data().comment}/>
+                
+             ))}
+             </div>
+         )}
+    
     
    </div>
           {/* widget */}
