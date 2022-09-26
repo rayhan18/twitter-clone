@@ -46,7 +46,7 @@ export default function Wedget({newResult,randomUsersResults}) {
             <h6 className="font-bold text-lg px-4">Who to floow me</h6>
             <AnimatePresence>
                 {randomUsersResults.slice(0,randomusernum).map(randomuser=>(
-                  <motion.div key={randomuser.login.username}
+                  <motion.div key={randomuser.login.id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}

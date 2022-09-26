@@ -11,6 +11,7 @@ import Post from '../../components/Post'
 import Sidebar from '../../components/Sidebar'
 import Wedget from '../../components/Wedget'
 import { db } from '../../firebase'
+import { comment } from 'postcss'
 
 
 
@@ -68,8 +69,8 @@ export default function Posts({newResult ,randomUsersResults}) {
        </div>
       
        <PostPage id={id} allpostdata={post}/>
-       <p>{id}</p>
-       <h2> {}</h2>
+       {/* <p>{id}</p> */}
+       {/* <h2> {}</h2> */}
 
        
         
@@ -80,11 +81,16 @@ export default function Posts({newResult ,randomUsersResults}) {
             <div>
               
              {comments.map((comment)=>(
-              //  console.log(comment.data() ,'hhh')
+                //console.log(comment.data() ,'hhh')
               
                 <GetComment key={comment.id} 
-                id={comment.id} 
-                comment={comment.data().comment}/>
+                commentId={comment.id} 
+                originalPostId={id}
+                comment={comment.data().comment}
+                name={comment.data().name}
+                uimg={comment.data().image}
+                uname={comment.data().ussername}
+                />
                 
              ))}
              </div>
