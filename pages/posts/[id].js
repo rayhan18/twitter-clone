@@ -12,6 +12,7 @@ import Sidebar from '../../components/Sidebar'
 import Wedget from '../../components/Wedget'
 import { db } from '../../firebase'
 import { comment } from 'postcss'
+import { AnimatePresence,motion } from 'framer-motion'
 
 
 
@@ -41,7 +42,7 @@ export default function Posts({newResult ,randomUsersResults}) {
     );
   }, [db, id]);
  
-
+   // console.log(comments ,'comments')
   return (
     <div className=''>
       <Head>
@@ -79,20 +80,30 @@ export default function Posts({newResult ,randomUsersResults}) {
 
          {comments.length > 0 &&(
             <div>
+              <AnimatePresence>
+                
               
              {comments.map((comment)=>(
                 //console.log(comment.data() ,'hhh')
-              
-                <GetComment key={comment.id} 
+                <motion.div key={comment.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+                >
+                  <GetComment key={comment.id} 
                 commentId={comment.id} 
                 originalPostId={id}
                 comment={comment.data().comment}
                 name={comment.data().name}
-                uimg={comment.data().image}
+                uimg={comment.data().userImg}
                 uname={comment.data().ussername}
                 />
+                </motion.div>
+               
                 
              ))}
+             </AnimatePresence>
              </div>
          )}
     

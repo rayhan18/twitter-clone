@@ -111,7 +111,7 @@ useEffect(() => {
           {/* post text  */}
           <p className="text-gray-800 text-[15px sm:text-[16px] mb-2">{comment}</p>
           {/* post images  */}
-          {/* <img className="rounded-2xl mr-2" src={comment?.data()?.image} alt="" /> */}
+          {/* <img className="rounded-2xl mr-2" src={comment?.image} alt="" /> */}
           {/* icons */}
           <div className="flex justify-between text-gray-500 p-2">
             <div className="flex items-center select-none">
